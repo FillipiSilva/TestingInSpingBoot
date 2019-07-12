@@ -1,5 +1,9 @@
 package org.generation.brazil.artemis.usuario;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.generation.brazil.artemis.ArtemisApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,20 +24,38 @@ public class UsuarioControllerIntegrationTest {
     @LocalServerPort
     private int port;
 
-    private String getRootUrl() {
-        return "http://localhost:" + port;
+    private String getRootUrl(String path) {
+        return "http://localhost:" + port + "/api/v1" + path;
     }
+
+
+/*    // Métodos para tornar
+    public String generateNomeRamdom() {
+        return RandomStringUtils.randomAlphabetic(100);
+    }
+
+    public String generateEmailRamdom() {
+        return RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphabetic(10) + ".com";
+    }
+
+    public String generateLoginSenhaRamdom() {
+        return RandomStringUtils.randomAlphanumeric(100);
+    }*/
+
 
     @Test
     public void save(){
-        Usuario usuario = new Usuario();
 
-        usuario.setNome("João Maria");
-        usuario.setEmail("joãomaria@gmail.com");
-        usuario.setLogin("joaomaria");
-        usuario.setSenha("@Joma987");
+        Usuario usuario = UsuarioMock.getUsuarioMock();
 
-        //ResponseEntity<Usuario> postResponse = testRestTemplate.postForEntity(getRootUrl() + "/usuarios", Usuario.class)
+        // Chamada da API
+        ResponseEntity<Usuario> postResponse = testRestTemplate.postForEntity(getRootUrl("/usuarios"), usuario, Usuario.class);
+
+        assertNotNull(postResponse);
+        assertEquals(201, postResponse.getStatusCodeValue());
 
     }
+
+
+
 }
